@@ -26,7 +26,7 @@ Resources:
       Runtime: nodejs4.3
       Environment:
         Variables:
-          NODE_ENV: production
+          NODE_ENV: Stage
       Role:
         Fn::ImportValue:
           !Join ['-', [!Ref 'ProjectId', !Ref 'AWS::Region', 'LambdaTrustRole']]
@@ -36,8 +36,10 @@ Resources:
           Properties:
             Path: /
             Method: get
+            StageName: Stage
         PostEvent:
           Type: Api
           Properties:
             Path: /
             Method: post
+            StageName: Stage
