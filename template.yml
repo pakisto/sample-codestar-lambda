@@ -10,9 +10,9 @@ Parameters:
   Stage:
     Type: String
     AllowedValues:
-      - staging
-      - production
-    Default: staging
+      - Stage
+      - Prod
+    Default: Stage
     Description: Stage that can be added to resource names
 
 # Enable blue/green deployments using this Globals section. For instructions, see the AWS CodeStar User Guide:
@@ -26,6 +26,32 @@ Parameters:
 #       Type: Canary10Percent5Minutes
 
 Resources:
+  HelloWorldApi:
+    Type: AWS::Serverless::Api
+    Properties:
+        StageName: !Ref 'Stage'
+        DefinitionBody:
+            swagger: 2.0
+            info:
+              title:
+                Ref: AWS::StackName
+            paths:
+              "/":
+                get:
+                  x-amazon-apigateway-integration:
+                    httpMethod: GET
+                    type: aws_proxy
+                    uri:
+                      Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${HelloWorld.Arn}/invocations
+                  responses: {}
+                post:
+                  x-amazon-apigateway-integration:
+                    httpMethod: POST
+                    type: aws_proxy
+                    uri:
+                      Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${HelloWorld.Arn}/invocations
+                  responses: {}
+
   HelloWorld:
     Type: AWS::Serverless::Function
     Properties:
@@ -52,6 +78,6 @@ Resources:
 Outputs:
   ApiUrl:
     Description: URL for application
-    Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod'
+    Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/${Stage}'
     Export:
       Name: !Sub 'ApiUrl-${Stage}'
