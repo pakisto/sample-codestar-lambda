@@ -3,14 +3,14 @@ var app = express();
 
 app.get('/', function(req, res) {
   res.send({
-    "Output": "Hello World!",
+    "Output": "Hello World! v1.0",
     "Env": process.env.NODE_ENV
   });
 });
 
 app.post('/', function(req, res) {
   res.send({
-    "Output": "Hello World!",
+    "Output": "Hello World! v1.0",
     "Env": process.env.NODE_ENV
   });
 });
